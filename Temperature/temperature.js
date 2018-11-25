@@ -57,6 +57,7 @@ function init() {
         // console.log("Random Forest Prediction: ", randomForestPrediction);
         // console.log("Evaluation: ", evaluateTestPoint(decisionTreePrediction, testPoint));
     }
+    document.getElementById('displayTree').innerHTML = treeToHtml(decisionTree.root);
 }
 
 function generateTestPoint() {
@@ -153,4 +154,36 @@ function evaluateTestPoint(coat, data) {
     }
 
     return benefit - coatMap.get(coat).cost;
+}
+
+// Recursive (DFS) function for displaying inner structure of decision tree
+function treeToHtml(tree) {
+    // only leafs containing category
+    if (tree.category) {
+        return ['<ul>',
+            '<li>',
+            '<a href="#">',
+            '<b>', tree.category, '</b>',
+            '</a>',
+            '</li>',
+            '</ul>'].join('');
+    }
+
+    return ['<ul>',
+        '<li>',
+        '<a href="#">',
+        '<b>', tree.attribute, ' ', tree.predicateName, ' ', tree.pivot, ' ?</b>',
+        '</a>',
+        '<ul>',
+        '<li>',
+        '<a href="#">yes</a>',
+        treeToHtml(tree.match),
+        '</li>',
+        '<li>',
+        '<a href="#">no</a>',
+        treeToHtml(tree.notMatch),
+        '</li>',
+        '</ul>',
+        '</li>',
+        '</ul>'].join('');
 }

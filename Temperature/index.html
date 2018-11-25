@@ -2,15 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MAPE-K Temperature</title>
+    <meta name="author" content="George Herde">
+    <meta name="description" content="A walk through of how to use decision trees">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Decision Trees</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body onload="init()">
-<h1>Mape-K Tutorial</h1>
-<p></p>
-<h2>Do I need a coat?</h2>
+<h1>An Introduction to Decision Tree</h1>
+
+<div id="currentContent" onload="changeContent()"></div>
+<div class="center">
+    <div>
+        <button class="nav-button" onclick="changeContent(-1)">Back</button>
+        <button class="nav-button" onclick="changeContent(1)">Next</button>
+    </div>
+</div>
+
+<div id="introduction" class="hidden">
+    <h2>Introduction</h2>
+    <p>Decision Trees are an important type of algorithm for predictive modeling machine learning. They also serve as a
+        great way to take apart a decision and represent it with only the most important factors.</p>
+
+    <div class="flex-container">
+        <div style="width: fit-content;">
+            <div class="tree fixed">
+                <ul>
+                    <li><a href="#"><b>Node</b></a>
+                        <ul>
+                            <li><a href="#">Leaf</a></li>
+                            <li><a href="#">Leaf</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <p>When modeling a decision tree, you are making a binary tree. In the tree each <b>node</b> represents a
+                single input variable and a split point on that variable and the leaves represent the final decision to
+                be made as a result.</p>
+        </div>
+    </div>
+    <div class="flex-container">
+        <div>
+            <p>In the most basic of cases a decision would be made based on a single value, or node. An example of this
+                could be whether or not to consider an individual an adult. In this case if an individual is above the
+                age 18 then they are an adult, otherwise they are not.</p>
+        </div>
+        <div style="width: fit-content;">
+            <div class="tree fixed">
+                <ul>
+                    <li><a href="#"><b>Age &gt;= 18 ?</b></a>
+                        <ul>
+                            <li><a href="#">yes</a></li>
+                            <li><a href="#">no</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <p>The <b>leaf</b> nodes of the tree contain an output variable, which is used to make a prediction. Predictions are
+        made by walking the splits of the tree until arriving at a leaf node and output the class value at that leaf
+        node.</p>
+    <p>Trees are fast to learn and very fast for making predictions. They are also often accurate for a broad range of
+        problems and do not require any special preparation for your data.</p>
+</div>
+
+<div id="problem-introduction" class="hidden">
+    <h2>Now lets see this</h2>
+</div>
+
+<div id="resulting-tree" class="hidden">
+    <b>Decision Tree:</b>
+    <div class="tree" id="displayTree"></div>
+</div>
 
 
 </body>
-<script type="text/javascript" src="https://cdn.rawgit.com/lagodiuk/decision-tree-js/master/decision-tree-min.js"></script>
+<script type="text/javascript"
+        src="https://cdn.rawgit.com/lagodiuk/decision-tree-js/master/decision-tree-min.js"></script>
 <script type="text/javascript" src="temperature.js"></script>
+<script type="text/javascript" src="navigation.js"></script>
 </html>
