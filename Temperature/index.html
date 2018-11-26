@@ -9,7 +9,7 @@
     <title>Decision Trees</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body onload="init()">
+<body>
 <h1>An Introduction to Decision Tree</h1>
 
 <div id="currentContent" onload="changeContent()"></div>
@@ -55,8 +55,8 @@
                 <ul>
                     <li><a href="#"><b>Age &gt;= 18 ?</b></a>
                         <ul>
-                            <li><a href="#">yes</a></li>
-                            <li><a href="#">no</a></li>
+                            <li><a href="#">Yes</a></li>
+                            <li><a href="#">No</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -71,19 +71,178 @@
         problems and do not require any special preparation for your data.</p>
 </div>
 
+<div id="library-introduction" class="hidden">
+    <h2>Decision tree in action</h2>
+    <p>As with most things related to machine learning, there is a rather large community working to create libraries
+        and tools that make it easier to use different algorithms. The impact of this is that all you likely just need
+        to make the choice about the problem you're going to solve and the algorithm you're interested in using.</p>
+    <p>For this tutorial on Decision Tree we're going to be using a library created by the user Lagoduik on Github,
+        <a href="https://github.com/lagodiuk/decision-tree-js/" target="_blank">it can be found here</a>. We will be
+        covering all of the code that goes into this tutorial and its different impacts on the resulting system.
+        Lagoduik does provide some demos for how to use their library as well, so if you'd like to see additional
+        examples make sure to check them out. </p>
+    <div class="flex-container">
+        <div>
+            <img src="images/snowstorm.svg">
+        </div>
+        <div>
+            <p>We've all probably been in the situation where we've looked out the window and have seen clouds on the
+                horizon or snow already coming down. The problem we're going to be tackling with our decision tree is,
+                <b>knowing the current temperature and weather, should I wear a coat?</b></p>
+        </div>
+    </div>
+</div>
+
 <div id="problem-introduction" class="hidden">
-    <h2>Now lets see this</h2>
+    <h2>Setting up</h2>
+    <i>All of the following code snippets are written in <a href="https://www.w3schools.com/js/js_es6.asp"
+                                                            target="_blank">ES6 Javascript</a>.</i>
+
+    <p>Now that we have a problem and a tool selected we need to create some training data for our system.
+        <b>Training data</b>, refers to the initial set of information that our system will rely on in order to
+        make its decisions. The more training data we provide to the decision tree the more accurate our results will
+        be.
+    </p>
+
+    <pre class="prettyprint lang-js">
+let data_sunny = "Sun";
+let data_rainy = "Rain";
+let data_snowy = "Snow";
+
+let no_coat = "None";
+let light_coat = "Light coat";
+let heavy_coat = "Heavy coat";
+
+let trainingData =[
+        {weather: data_sunny, temperature: 70, coat: no_coat},
+        {weather: data_sunny, temperature: 40, coat: light_coat},
+        {weather: data_sunny, temperature: 7, coat: heavy_coat}
+    ];</pre>
+    <p>First we establish a set of variables so that when we make comparisons we can refer to the variable. With these
+        variables and our training data we create the basis of the language that our decision tree will use.</p>
+    <p><b>Unfortunately</b>, if we use the training data as it is in the above snippet we do not provide a great basis
+        for our decision tree. This is because we do not include "Rain" or "Snow" in the data, which could cause our
+        system to give us incorrect recommendations when it comes to what type of coat we should wear when that type of
+        weather appears.</p>
+    <p>Instead, we will use the following set of training data which is quite complete considering the problem we are
+        tackling.</p>
+    <pre class="prettyprint lang-js">
+let trainingData = [
+        {weather: data_sunny, temperature: 70, coat: no_coat},
+        {weather: data_sunny, temperature: 65, coat: no_coat},
+        {weather: data_sunny, temperature: 40, coat: light_coat},
+        {weather: data_sunny, temperature: 15, coat: heavy_coat},
+        {weather: data_sunny, temperature: 7, coat: heavy_coat},
+
+        {weather: data_rainy, temperature: 75, coat: light_coat},
+        {weather: data_rainy, temperature: 67, coat: light_coat},
+        {weather: data_rainy, temperature: 58, coat: light_coat},
+        {weather: data_rainy, temperature: 52, coat: light_coat},
+        {weather: data_rainy, temperature: 42, coat: light_coat},
+        {weather: data_rainy, temperature: 27, coat: heavy_coat},
+        {weather: data_rainy, temperature: 15, coat: heavy_coat},
+
+        {weather: data_snowy, temperature: 32, coat: heavy_coat},
+        {weather: data_snowy, temperature: 21, coat: heavy_coat},
+        {weather: data_snowy, temperature: 14, coat: heavy_coat},
+        {weather: data_snowy, temperature: 3, coat: heavy_coat}
+    ];</pre>
+</div>
+
+<div id="create-tree" class="hidden">
+    <h2>Creating the decision tree with the library</h2>
 </div>
 
 <div id="resulting-tree" class="hidden">
     <b>Decision Tree:</b>
-    <div class="tree" id="displayTree"></div>
+    <div class="tree" id="displayTreeResults"></div>
+</div>
+
+<div id="test-tree" class="hidden">
+    <h2>Now try with your own training data.</h2>
+    <div style="float:left;">
+        <p>If you alter the below information and then press submit you can see how it affects the decision tree.</p>
+        <br/>
+
+        <fieldset id="data-entry-sample" class="data-entry-set hidden">
+            <label>Weather
+                <select name="weather">
+                    <option value="Sun">Sun</option>
+                    <option value="Rain">Rain</option>
+                    <option value="Snow">Snow</option>
+                </select>
+            </label>
+            <label>Temperature
+                <input type="number" max="120" name="temperature">
+            </label>
+            <label>Coat
+                <select name="coat">
+                    <option value="None">None</option>
+                    <option value="Light">Light</option>
+                    <option value="Heavy">Heavy</option>
+                </select>
+            </label>
+            <button onclick="removeFieldSet(this.parentElement)">-</button>
+        </fieldset>
+        <form id="testing-training-data" onsubmit="return false;">
+            <form>
+                <fieldset id="fieldSet0" class="data-entry-set">
+                    <label>Weather
+                        <select name="weather">
+                            <option value="Sun">Sun</option>
+                            <option value="Rain">Rain</option>
+                            <option value="Snow">Snow</option>
+                        </select>
+                    </label>
+                    <label>Temperature
+                        <input type="number" max="120" name="temperature">
+                    </label>
+                    <label>Coat
+                        <select name="coat">
+                            <option value="None">None</option>
+                            <option value="Light">Light</option>
+                            <option value="Heavy">Heavy</option>
+                        </select>
+                    </label>
+                    <button onclick="removeFieldSet(this.parentElement)">-</button>
+                </fieldset>
+                <button id="addFieldSetButton" onclick="addFieldSet(this.parentElement)">+</button>
+                <button onclick="initTestingTree()">Submit</button>
+            </form>
+            <!--<label>-->
+            <!--<textarea id="testing-training-data" name="testing-training-data" rows="28" cols="50">[-->
+            <!--{weather: data_sunny, temperature: 70, coat: no_coat},-->
+            <!--{weather: data_sunny, temperature: 65, coat: no_coat},-->
+            <!--{weather: data_sunny, temperature: 40, coat: light_coat},-->
+            <!--{weather: data_sunny, temperature: 15, coat: heavy_coat},-->
+            <!--{weather: data_sunny, temperature: 7, coat: heavy_coat},-->
+            <!---->
+            <!--{weather: data_rainy, temperature: 75, coat: light_coat},-->
+            <!--{weather: data_rainy, temperature: 67, coat: light_coat},-->
+            <!--{weather: data_rainy, temperature: 58, coat: light_coat},-->
+            <!--{weather: data_rainy, temperature: 52, coat: light_coat},-->
+            <!--{weather: data_rainy, temperature: 42, coat: light_coat},-->
+            <!--{weather: data_rainy, temperature: 27, coat: heavy_coat},-->
+            <!--{weather: data_rainy, temperature: 15, coat: heavy_coat},-->
+            <!---->
+            <!--{weather: data_snowy, temperature: 32, coat: heavy_coat},-->
+            <!--{weather: data_snowy, temperature: 21, coat: heavy_coat},-->
+            <!--{weather: data_snowy, temperature: 14, coat: heavy_coat},-->
+            <!--{weather: data_snowy, temperature: 3, coat: heavy_coat}-->
+            <!--]</textarea>-->
+            <!--</label>-->
+            <br/>
+    </div>
+    <div style="float: right;" class="tree" id="displayTreeTest"></div>
 </div>
 
 
 </body>
 <script type="text/javascript"
         src="https://cdn.rawgit.com/lagodiuk/decision-tree-js/master/decision-tree-min.js"></script>
-<script type="text/javascript" src="temperature.js"></script>
-<script type="text/javascript" src="navigation.js"></script>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+<script type="text/javascript" src="general.js"></script>
+<script type="text/javascript" src="example.js"></script>
+<script type="text/javascript" src="testing.js"></script>
+<script type="text/javascript" src="evaluate.js"></script>
 </html>
