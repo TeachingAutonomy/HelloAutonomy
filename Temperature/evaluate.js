@@ -20,25 +20,25 @@ function evaluateTestPoint(coat, data) {
             if (coat === NONE)
                 return 10;
             if (coat === LIGHT)
-                return 7;
-            if (coat === HEAVY)
                 return 0;
+            if (coat === HEAVY)
+                return -5;
         }
         // Sunny between COLD & HOT
         if (data.temperature < HOT && data.temperature > COLD) {
             if (coat === NONE)
-                return 5;
+                return 3;
             if (coat === LIGHT)
                 return 10;
             if (coat === HEAVY)
-                return 8;
+                return -3;
         }
         // Sunny under COLD
         if (data.temperature <= COLD) {
             if (coat === NONE)
-                return 0;
+                return -3;
             if (coat === LIGHT)
-                return 5;
+                return 0;
             if (coat === HEAVY)
                 return 10;
         }
@@ -47,7 +47,7 @@ function evaluateTestPoint(coat, data) {
         // Rainy over HOT
         if (data.temperature >= HOT) {
             if (coat === NONE)
-                return 3;
+                return -3;
             if (coat === LIGHT)
                 return 10;
             if (coat === HEAVY)
@@ -60,7 +60,7 @@ function evaluateTestPoint(coat, data) {
             if (coat === LIGHT)
                 return 10;
             if (coat === HEAVY)
-                return 3;
+                return 0;
         }
         // Rainy under COLD
         if (data.temperature <= COLD) {
@@ -81,7 +81,7 @@ function evaluateTestPoint(coat, data) {
         // Snowy between COLD & HOT
         if (data.temperature < HOT && data.temperature > COLD) {
             if (coat === NONE)
-                return 0;
+                return -3;
             if (coat === LIGHT)
                 return 3;
             if (coat === HEAVY)
@@ -90,7 +90,7 @@ function evaluateTestPoint(coat, data) {
         // Snowy under COLD
         if (data.temperature <= COLD) {
             if (coat === NONE)
-                return 0;
+                return -3;
             if (coat === LIGHT)
                 return 0;
             if (coat === HEAVY)

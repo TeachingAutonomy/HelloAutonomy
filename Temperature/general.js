@@ -6,7 +6,7 @@ let contentOrder = [
     "problem-introduction",
     "create-tree",
     "evaluate-tree",
-    "resulting-tree",
+    "training-data",
     "test-tree"
 ];
 
