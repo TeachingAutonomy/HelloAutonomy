@@ -1,13 +1,117 @@
+"use strict";
+
+// const SUN = "Sun";
+// const RAIN = "Rain";
+// const SNOW = "Snow";
+
+// const NONE = "None";
+// const LIGHT = "Light coat";
+// const HEAVY = "Heavy coat";
+
+function evaluateTestPoint(coat, data) {
+    // Ranking on a 10pt scale
+
+    let HOT = 60;
+    let COLD = 30;
+
+    if (data.weather === SUN) {
+        // Sunny over HOT
+        if (data.temperature >= HOT) {
+            if (coat === NONE)
+                return 10;
+            if (coat === LIGHT)
+                return 7;
+            if (coat === HEAVY)
+                return 0;
+        }
+        // Sunny between COLD & HOT
+        if (data.temperature < HOT && data.temperature > COLD) {
+            if (coat === NONE)
+                return 5;
+            if (coat === LIGHT)
+                return 10;
+            if (coat === HEAVY)
+                return 8;
+        }
+        // Sunny under COLD
+        if (data.temperature <= COLD) {
+            if (coat === NONE)
+                return 0;
+            if (coat === LIGHT)
+                return 5;
+            if (coat === HEAVY)
+                return 10;
+        }
+    }
+    if (data.weather === RAIN) {
+        // Rainy over HOT
+        if (data.temperature >= HOT) {
+            if (coat === NONE)
+                return 3;
+            if (coat === LIGHT)
+                return 10;
+            if (coat === HEAVY)
+                return 0;
+        }
+        // Rainy between COLD & HOT
+        if (data.temperature < HOT && data.temperature > COLD) {
+            if (coat === NONE)
+                return 0;
+            if (coat === LIGHT)
+                return 10;
+            if (coat === HEAVY)
+                return 3;
+        }
+        // Rainy under COLD
+        if (data.temperature <= COLD) {
+            if (coat === NONE)
+                return 0;
+            if (coat === LIGHT)
+                return 3;
+            if (coat === HEAVY)
+                return 10;
+        }
+    }
+    if (data.weather === SNOW) {
+        // Snowy over HOT
+        if (data.temperature >= HOT) {
+            console.log("It should never be 60deg and snowing");
+            return 0;
+        }
+        // Snowy between COLD & HOT
+        if (data.temperature < HOT && data.temperature > COLD) {
+            if (coat === NONE)
+                return 0;
+            if (coat === LIGHT)
+                return 3;
+            if (coat === HEAVY)
+                return 10;
+        }
+        // Snowy under COLD
+        if (data.temperature <= COLD) {
+            if (coat === NONE)
+                return 0;
+            if (coat === LIGHT)
+                return 0;
+            if (coat === HEAVY)
+                return 10;
+        }
+    }
+
+    console.log(data, "Unaccounted for scenario");
+    return 0;
+}
+
 function evaluateTree(tree) {
-    for (let i = 0; i < 10; i++) {
+    let total = 0;
+    let i = 0;
+    for (; i < 1000; i++) {
         let testPoint = generateTestPoint();
 
         let decisionTreePrediction = tree.predict(testPoint);
-
-        console.log("TEST: Weather = %s Temperature = %d", testPoint.weather, testPoint.temperature);
-        console.log("Decision Tree Prediction: ", decisionTreePrediction);
-        console.log("Evaluation: ", evaluateTestPoint(decisionTreePrediction, testPoint));
+        total += evaluateTestPoint(decisionTreePrediction, testPoint);
     }
+    return total / i;
 }
 
 function generateTestPoint() {
@@ -15,98 +119,21 @@ function generateTestPoint() {
     let choice = getRndInteger(0, 2);
     switch (choice) {
         case 0:
-            testPoint.weather = data_sunny;
+            testPoint.weather = SUN;
+            testPoint.temperature = getRndInteger(0, 90);
             break;
         case 1:
-            testPoint.weather = data_rainy;
+            testPoint.weather = RAIN;
+            testPoint.temperature = getRndInteger(0, 90);
             break;
         case 2:
-            testPoint.weather = data_snowy;
+            testPoint.weather = SNOW;
+            testPoint.temperature = getRndInteger(0, 40);
             break;
     }
-    testPoint.temperature = getRndInteger(0, 90);
     return testPoint;
 }
 
-function generateDataPoint() {
-    let dataPoint = {};
-    let choice = getRndInteger(0, 3);
-    switch (choice) {
-        case 0:
-            dataPoint.weather = data_sunny;
-            break;
-        case 1:
-            dataPoint.weather = data_rainy;
-            break;
-        case 2:
-            dataPoint.weather = data_snowy;
-            break;
-    }
-    dataPoint.temperature = getRndInteger(0, 90);
-    choice = getRndInteger(0, 3);
-    switch (choice) {
-        case 0:
-            dataPoint.coat = no_coat;
-            break;
-        case 1:
-            dataPoint.coat = light_coat;
-            break;
-        case 2:
-            dataPoint.coat = heavy_coat;
-            break;
-    }
-    return dataPoint;
-}
-
-
-// Helper Function
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-
-// Evaluation Function
-
-// All choices have a cost
-// No coat is required for temps over 60
-// A light coat is sufficient with temperatures above 30, returning a benefit of 2
-// However, a heavy coat was necessary if the temperature was below 32 and it started to snow, providing a benefit of 10.
-let coatMap = new Map();
-coatMap.set(no_coat, {name: 'No Coat', cost: 1});
-coatMap.set(light_coat, {name: 'Light Coat', cost: 5});
-coatMap.set(heavy_coat, {name: 'Heavy Coat', cost: 10});
-
-function evaluateTestPoint(coat, data) {
-    let noCoatBreakPoint = 60;
-    let lightCoatBreakPoint = 30;
-
-    let benefit = 0;
-
-    // Temperature Evaluation
-    if (data.temperature >= noCoatBreakPoint) {
-        if (coat === no_coat)
-            benefit += 10;
-    }
-    else if (data.temperature >= lightCoatBreakPoint) {
-        if (coat === light_coat)
-            benefit += 10;
-    }
-    else { // test.temperature < lightCoatBreakPoint
-        if (coat === light_coat)
-            benefit += 5;
-        if (coat === heavy_coat)
-            benefit += 10;
-    }
-
-    // Weather Evaluation
-    if (data.weather === data_rainy) {
-        if (coat === no_coat)
-            benefit -= 5;
-    }
-    else if (data.weather === data_snowy) {
-        if (coat !== heavy_coat)
-            benefit -= 5;
-    }
-
-    return benefit - coatMap.get(coat).cost;
 }

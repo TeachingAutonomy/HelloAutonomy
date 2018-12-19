@@ -1,30 +1,32 @@
-let data_sunny = "Sun";
-let data_rainy = "Rain";
-let data_snowy = "Snow";
+"use strict";
 
-let no_coat = "None";
-let light_coat = "Light coat";
-let heavy_coat = "Heavy coat";
+const SUN = "Sun";
+const RAIN = "Rain";
+const SNOW = "Snow";
+
+const NONE = "None";
+const LIGHT = "Light coat";
+const HEAVY = "Heavy coat";
 
 let trainingData = [
-    {weather: data_sunny, temperature: 70, coat: no_coat},
-    {weather: data_sunny, temperature: 65, coat: no_coat},
-    {weather: data_sunny, temperature: 40, coat: light_coat},
-    {weather: data_sunny, temperature: 15, coat: heavy_coat},
-    {weather: data_sunny, temperature: 7, coat: heavy_coat},
+    {weather: SUN, temperature: 70, coat: NONE},
+    {weather: SUN, temperature: 65, coat: NONE},
+    {weather: SUN, temperature: 40, coat: LIGHT},
+    {weather: SUN, temperature: 15, coat: HEAVY},
+    {weather: SUN, temperature: 7, coat: HEAVY},
 
-    {weather: data_rainy, temperature: 75, coat: light_coat},
-    {weather: data_rainy, temperature: 67, coat: light_coat},
-    {weather: data_rainy, temperature: 58, coat: light_coat},
-    {weather: data_rainy, temperature: 52, coat: light_coat},
-    {weather: data_rainy, temperature: 42, coat: light_coat},
-    {weather: data_rainy, temperature: 27, coat: heavy_coat},
-    {weather: data_rainy, temperature: 15, coat: heavy_coat},
+    {weather: RAIN, temperature: 75, coat: LIGHT},
+    {weather: RAIN, temperature: 67, coat: LIGHT},
+    {weather: RAIN, temperature: 58, coat: LIGHT},
+    {weather: RAIN, temperature: 52, coat: LIGHT},
+    {weather: RAIN, temperature: 42, coat: LIGHT},
+    {weather: RAIN, temperature: 27, coat: HEAVY},
+    {weather: RAIN, temperature: 15, coat: HEAVY},
 
-    {weather: data_snowy, temperature: 32, coat: heavy_coat},
-    {weather: data_snowy, temperature: 21, coat: heavy_coat},
-    {weather: data_snowy, temperature: 14, coat: heavy_coat},
-    {weather: data_snowy, temperature: 3, coat: heavy_coat}
+    {weather: SNOW, temperature: 32, coat: HEAVY},
+    {weather: SNOW, temperature: 21, coat: HEAVY},
+    {weather: SNOW, temperature: 14, coat: HEAVY},
+    {weather: SNOW, temperature: 3, coat: HEAVY}
 ];
 
 let config = {
@@ -32,5 +34,4 @@ let config = {
     categoryAttr: 'coat',
 };
 
-let decisionTree = new dt.DecisionTree(config);
-document.getElementById('displayTreeResults').innerHTML = treeToHtml(decisionTree.root);
+var decisionTree = new dt.DecisionTree(config);

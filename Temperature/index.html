@@ -95,9 +95,6 @@
 
 <div id="problem-introduction" class="hidden">
     <h2>Setting up</h2>
-    <i>All of the following code snippets are written in <a href="https://www.w3schools.com/js/js_es6.asp"
-                                                            target="_blank">ES6 Javascript</a>.</i>
-
     <p>Now that we have a problem and a tool selected we need to create some training data for our system.
         <b>Training data</b>, refers to the initial set of information that our system will rely on in order to
         make its decisions. The more training data we provide to the decision tree the more accurate our results will
@@ -105,19 +102,19 @@
     </p>
 
     <pre class="prettyprint lang-js">
-let data_sunny = "Sun";
-let data_rainy = "Rain";
-let data_snowy = "Snow";
+const SUN = "Sun";
+const RAIN = "Rain";
+const SNOW = "Snow";
 
-let no_coat = "None";
-let light_coat = "Light coat";
-let heavy_coat = "Heavy coat";
+const NONE = "None";
+const LIGHT = "Light coat";
+const HEAVY = "Heavy coat";
 
 let trainingData =[
-        {weather: data_sunny, temperature: 70, coat: no_coat},
-        {weather: data_sunny, temperature: 40, coat: light_coat},
-        {weather: data_sunny, temperature: 7, coat: heavy_coat}
-    ];</pre>
+    {weather: SUN, temperature: 70, coat: NONE},
+    {weather: SUN, temperature: 40, coat: LIGHT},
+    {weather: SUN, temperature: 7, coat: HEAVY}
+];</pre>
     <p>First we establish a set of variables so that when we make comparisons we can refer to the variable. With these
         variables and our training data we create the basis of the language that our decision tree will use.</p>
     <p><b>Unfortunately</b>, if we use the training data as it is in the above snippet we do not provide a great basis
@@ -128,34 +125,109 @@ let trainingData =[
         tackling.</p>
     <pre class="prettyprint lang-js">
 let trainingData = [
-        {weather: data_sunny, temperature: 70, coat: no_coat},
-        {weather: data_sunny, temperature: 65, coat: no_coat},
-        {weather: data_sunny, temperature: 40, coat: light_coat},
-        {weather: data_sunny, temperature: 15, coat: heavy_coat},
-        {weather: data_sunny, temperature: 7, coat: heavy_coat},
+    {weather: SUN, temperature: 70, coat: NONE},
+    {weather: SUN, temperature: 65, coat: NONE},
+    {weather: SUN, temperature: 40, coat: LIGHT},
+    {weather: SUN, temperature: 15, coat: HEAVY},
+    {weather: SUN, temperature: 7, coat: HEAVY},
 
-        {weather: data_rainy, temperature: 75, coat: light_coat},
-        {weather: data_rainy, temperature: 67, coat: light_coat},
-        {weather: data_rainy, temperature: 58, coat: light_coat},
-        {weather: data_rainy, temperature: 52, coat: light_coat},
-        {weather: data_rainy, temperature: 42, coat: light_coat},
-        {weather: data_rainy, temperature: 27, coat: heavy_coat},
-        {weather: data_rainy, temperature: 15, coat: heavy_coat},
+    {weather: RAIN, temperature: 75, coat: LIGHT},
+    {weather: RAIN, temperature: 67, coat: LIGHT},
+    {weather: RAIN, temperature: 58, coat: LIGHT},
+    {weather: RAIN, temperature: 52, coat: LIGHT},
+    {weather: RAIN, temperature: 42, coat: LIGHT},
+    {weather: RAIN, temperature: 27, coat: HEAVY},
+    {weather: RAIN, temperature: 15, coat: HEAVY},
 
-        {weather: data_snowy, temperature: 32, coat: heavy_coat},
-        {weather: data_snowy, temperature: 21, coat: heavy_coat},
-        {weather: data_snowy, temperature: 14, coat: heavy_coat},
-        {weather: data_snowy, temperature: 3, coat: heavy_coat}
-    ];</pre>
+    {weather: SNOW, temperature: 32, coat: HEAVY},
+    {weather: SNOW, temperature: 21, coat: HEAVY},
+    {weather: SNOW, temperature: 14, coat: HEAVY},
+    {weather: SNOW, temperature: 3, coat: HEAVY}
+];</pre>
 </div>
 
 <div id="create-tree" class="hidden">
     <h2>Creating the decision tree with the library</h2>
+
+    <p>Now that we have our training data we are able to make the decision tree easily using the library. Here is the
+        code snippet that sets up the decision tree so that it can be used.</p>
+
+    <pre class="prettyprint lang-js">
+let config = {
+    trainingSet: trainingData,
+    categoryAttr: 'coat',
+};
+var decisionTree = new dt.DecisionTree(config);</pre>
+
+    <p>Now that the decision tree has been setup we can utilize it to make predictions about the question we designed
+        our data around. <strong>Do we need a coat with today's weather?</strong> To make predictions we call the
+        'predict' method on our decision tree and give an object with weather and temperature parameters.</p>
+    <pre class="prettyprint lang-js">
+decisionTree.predict({weather: "Sun", temperature: 28})</pre>
+    <p>You can try this now in the browser console as well by entering the command above. You can also try changing
+        "Sun" to "Snow" or the temperature value to another. The result returned is determined by the decision tree.
+        Lagoduik's library also </p>
+    <div class="tree" id="displayTreeResults"></div>
+</div>
+
+<div id="evaluate-tree" class="hidden">
+    <h2>Evaluating the System</h2>
+    <p>We went through this process to be able to answer a question, <b>Do I need a coat?</b> In order to decide if our
+        system is accurate we need to be able to evaluate it. For our evaluation we're going to define certain
+        boundaries.</p>
+    <ol>
+        <li>When it is over 60&deg;, you do not need a coat.</li>
+        <li>As long as it is above 30&deg; and not snowing, you can wear a light coat.</li>
+        <li>When it is below 30&deg; or snowing, you need a heavy coat.</li>
+        <li>If it is raining you will at least need a light coat.</li>
+    </ol>
+    <p>There are definitely many more factors to consider in the real world if we wanted to answer this question in the
+        most complete fashion, but this is a good starting point.</p>
+
+    <p>With these evaluation rules in mind we can create an evaluation function. This way we can check how accurate each
+        our decision tree is within the scope of our problem. Checkout <a href="evaluate.js" target="_blank">evaluate.js</a>
+        if you want to see the whole method, it is named "evaluateTestPoint".</p>
+
+    <p>Now to find the accuracy of our decision tree, we need to take our evaluation method and run it hundreds of times
+        with different test points. This will give us a substantial amount of evidence to support our resulting level of
+        accuracy.</p>
+
+    <p>If you at <a href="evaluate.js" target="_blank">evaluate.js</a> you will see a method called 'evaluateTree' where
+        we can provide a decision tree and a loop runs. The loop generates a random test point and then evaluates it
+        against our decision tree to find the accuracy of the prediction. Since these test points are random the outcome
+        resulting average of the accuracy can change slightly, but as you can see since we have a good set of training
+        data we have relatively high accuracy, in relation to our evaluation rules.</p>
+    <span id="exampleEvaluation"></span>
+    <button onclick="evaluateTree(decisionTree)">Click to Test</button>
+
 </div>
 
 <div id="resulting-tree" class="hidden">
-    <b>Decision Tree:</b>
-    <div class="tree" id="displayTreeResults"></div>
+    <p>Now that we've made one tree and know how to use it. Let's take a look into how the training data can affect
+        the decision tree we make. First here is the training data that we already used when creating </p>
+    <h2>Training Data:</h2>
+    <pre class="prettyprint lang-js">
+let trainingData = [
+    {weather: data_sunny, temperature: 70, coat: no_coat},
+    {weather: data_sunny, temperature: 65, coat: no_coat},
+    {weather: data_sunny, temperature: 40, coat: light_coat},
+    {weather: data_sunny, temperature: 15, coat: heavy_coat},
+    {weather: data_sunny, temperature: 7, coat: heavy_coat},
+
+    {weather: data_rainy, temperature: 75, coat: light_coat},
+    {weather: data_rainy, temperature: 67, coat: light_coat},
+    {weather: data_rainy, temperature: 58, coat: light_coat},
+    {weather: data_rainy, temperature: 52, coat: light_coat},
+    {weather: data_rainy, temperature: 42, coat: light_coat},
+    {weather: data_rainy, temperature: 27, coat: heavy_coat},
+    {weather: data_rainy, temperature: 15, coat: heavy_coat},
+
+    {weather: data_snowy, temperature: 32, coat: heavy_coat},
+    {weather: data_snowy, temperature: 21, coat: heavy_coat},
+    {weather: data_snowy, temperature: 14, coat: heavy_coat},
+    {weather: data_snowy, temperature: 3, coat: heavy_coat}
+];</pre>
+    <p>Training data defines the entire space </p>
 </div>
 
 <div id="test-tree" class="hidden">
@@ -185,53 +257,52 @@ let trainingData = [
             <button onclick="removeFieldSet(this.parentElement)">-</button>
         </fieldset>
         <form id="testing-training-data" onsubmit="return false;">
-            <form>
-                <fieldset id="fieldSet0" class="data-entry-set">
-                    <label>Weather
-                        <select name="weather">
-                            <option value="Sun">Sun</option>
-                            <option value="Rain">Rain</option>
-                            <option value="Snow">Snow</option>
-                        </select>
-                    </label>
-                    <label>Temperature
-                        <input type="number" max="120" name="temperature">
-                    </label>
-                    <label>Coat
-                        <select name="coat">
-                            <option value="None">None</option>
-                            <option value="Light">Light</option>
-                            <option value="Heavy">Heavy</option>
-                        </select>
-                    </label>
-                    <button onclick="removeFieldSet(this.parentElement)">-</button>
-                </fieldset>
-                <button id="addFieldSetButton" onclick="addFieldSet(this.parentElement)">+</button>
-                <button onclick="initTestingTree()">Submit</button>
-            </form>
-            <!--<label>-->
-            <!--<textarea id="testing-training-data" name="testing-training-data" rows="28" cols="50">[-->
-            <!--{weather: data_sunny, temperature: 70, coat: no_coat},-->
-            <!--{weather: data_sunny, temperature: 65, coat: no_coat},-->
-            <!--{weather: data_sunny, temperature: 40, coat: light_coat},-->
-            <!--{weather: data_sunny, temperature: 15, coat: heavy_coat},-->
-            <!--{weather: data_sunny, temperature: 7, coat: heavy_coat},-->
-            <!---->
-            <!--{weather: data_rainy, temperature: 75, coat: light_coat},-->
-            <!--{weather: data_rainy, temperature: 67, coat: light_coat},-->
-            <!--{weather: data_rainy, temperature: 58, coat: light_coat},-->
-            <!--{weather: data_rainy, temperature: 52, coat: light_coat},-->
-            <!--{weather: data_rainy, temperature: 42, coat: light_coat},-->
-            <!--{weather: data_rainy, temperature: 27, coat: heavy_coat},-->
-            <!--{weather: data_rainy, temperature: 15, coat: heavy_coat},-->
-            <!---->
-            <!--{weather: data_snowy, temperature: 32, coat: heavy_coat},-->
-            <!--{weather: data_snowy, temperature: 21, coat: heavy_coat},-->
-            <!--{weather: data_snowy, temperature: 14, coat: heavy_coat},-->
-            <!--{weather: data_snowy, temperature: 3, coat: heavy_coat}-->
-            <!--]</textarea>-->
-            <!--</label>-->
-            <br/>
+            <fieldset id="fieldSet0" class="data-entry-set">
+                <label>Weather
+                    <select name="weather">
+                        <option value="Sun">Sun</option>
+                        <option value="Rain">Rain</option>
+                        <option value="Snow">Snow</option>
+                    </select>
+                </label>
+                <label>Temperature (&deg;F)
+                    <input type="number" max="120" name="temperature">
+                </label>
+                <label>Coat
+                    <select name="coat">
+                        <option value="None">None</option>
+                        <option value="Light">Light</option>
+                        <option value="Heavy">Heavy</option>
+                    </select>
+                </label>
+                <button onclick="removeFieldSet(this.parentElement)">-</button>
+            </fieldset>
+            <button id="addFieldSetButton" onclick="addFieldSet(this.parentElement)">+</button>
+            <button onclick="initTestingTree()">Submit</button>
+        </form>
+        <!--<label>-->
+        <!--<textarea id="testing-training-data" name="testing-training-data" rows="28" cols="50">[-->
+        <!--{weather: data_sunny, temperature: 70, coat: no_coat},-->
+        <!--{weather: data_sunny, temperature: 65, coat: no_coat},-->
+        <!--{weather: data_sunny, temperature: 40, coat: light_coat},-->
+        <!--{weather: data_sunny, temperature: 15, coat: heavy_coat},-->
+        <!--{weather: data_sunny, temperature: 7, coat: heavy_coat},-->
+        <!---->
+        <!--{weather: data_rainy, temperature: 75, coat: light_coat},-->
+        <!--{weather: data_rainy, temperature: 67, coat: light_coat},-->
+        <!--{weather: data_rainy, temperature: 58, coat: light_coat},-->
+        <!--{weather: data_rainy, temperature: 52, coat: light_coat},-->
+        <!--{weather: data_rainy, temperature: 42, coat: light_coat},-->
+        <!--{weather: data_rainy, temperature: 27, coat: heavy_coat},-->
+        <!--{weather: data_rainy, temperature: 15, coat: heavy_coat},-->
+        <!---->
+        <!--{weather: data_snowy, temperature: 32, coat: heavy_coat},-->
+        <!--{weather: data_snowy, temperature: 21, coat: heavy_coat},-->
+        <!--{weather: data_snowy, temperature: 14, coat: heavy_coat},-->
+        <!--{weather: data_snowy, temperature: 3, coat: heavy_coat}-->
+        <!--]</textarea>-->
+        <!--</label>-->
+        <br/>
     </div>
     <div style="float: right;" class="tree" id="displayTreeTest"></div>
 </div>
@@ -241,8 +312,8 @@ let trainingData = [
 <script type="text/javascript"
         src="https://cdn.rawgit.com/lagodiuk/decision-tree-js/master/decision-tree-min.js"></script>
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-<script type="text/javascript" src="general.js"></script>
 <script type="text/javascript" src="example.js"></script>
 <script type="text/javascript" src="testing.js"></script>
 <script type="text/javascript" src="evaluate.js"></script>
+<script type="text/javascript" src="general.js"></script>
 </html>
