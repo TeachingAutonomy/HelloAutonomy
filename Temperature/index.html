@@ -166,7 +166,9 @@ var decisionTree = new dt.DecisionTree(config);</pre>
 decisionTree.predict({weather: "Sun", temperature: 28})</pre>
     <p>You can try this now in the browser console as well by entering the command above. You can also try changing
         "Sun" to "Snow" or the temperature value to another. The result returned is determined by the decision tree.
-        Lagoduik's library also </p>
+        Lagoduik's github examples also included an easy way to display the tree in HTML, so here is the tree we
+        created. As you can see we are evaluating one scenario at a time and coming to a conclusion about what type of
+        coat we should wear.</p>
     <div class="tree" id="displayTreeResults"></div>
 </div>
 
@@ -197,41 +199,45 @@ decisionTree.predict({weather: "Sun", temperature: 28})</pre>
         we can provide a decision tree and a loop runs. The loop generates a random test point and then evaluates it
         against our decision tree to find the accuracy of the prediction.</p>
     <p>The accuracy of our decision tree: <span id="exampleEvaluation"></span>/10
-        <button onclick="exampleEvaluationButton()">Retest</button>
+        <button onclick="exampleEvaluationButton()">RETEST</button>
     </p>
 
     <p>Since these test points are random the outcome resulting average of the accuracy can change slightly, but as you
         can see since we have a good set of training data we have relatively high accuracy, in relation to our
         evaluation rules.</p>
-
 </div>
 
 <div id="resulting-tree" class="hidden">
-    <p>Now that we've made one tree and know how to use it. Let's take a look into how the training data can affect
-        the decision tree we make. First here is the training data that we already used when creating </p>
     <h2>Training Data:</h2>
+
+    <p>Now that we've made a tree, know how to use it, and evaluate its effectiveness. Let's take a look into how the
+        training data can affect the decision tree we make. First, here is the training data that we already used when
+        creating the tree from the example.</p>
+
     <pre class="prettyprint lang-js">
 let trainingData = [
-    {weather: data_sunny, temperature: 70, coat: no_coat},
-    {weather: data_sunny, temperature: 65, coat: no_coat},
-    {weather: data_sunny, temperature: 40, coat: light_coat},
-    {weather: data_sunny, temperature: 15, coat: heavy_coat},
-    {weather: data_sunny, temperature: 7, coat: heavy_coat},
+    {weather: SUN, temperature: 70, coat: NONE},
+    {weather: SUN, temperature: 65, coat: NONE},
+    {weather: SUN, temperature: 40, coat: LIGHT},
+    {weather: SUN, temperature: 15, coat: HEAVY},
+    {weather: SUN, temperature: 7, coat: HEAVY},
 
-    {weather: data_rainy, temperature: 75, coat: light_coat},
-    {weather: data_rainy, temperature: 67, coat: light_coat},
-    {weather: data_rainy, temperature: 58, coat: light_coat},
-    {weather: data_rainy, temperature: 52, coat: light_coat},
-    {weather: data_rainy, temperature: 42, coat: light_coat},
-    {weather: data_rainy, temperature: 27, coat: heavy_coat},
-    {weather: data_rainy, temperature: 15, coat: heavy_coat},
+    {weather: RAIN, temperature: 75, coat: LIGHT},
+    {weather: RAIN, temperature: 67, coat: LIGHT},
+    {weather: RAIN, temperature: 58, coat: LIGHT},
+    {weather: RAIN, temperature: 52, coat: LIGHT},
+    {weather: RAIN, temperature: 42, coat: LIGHT},
+    {weather: RAIN, temperature: 27, coat: HEAVY},
+    {weather: RAIN, temperature: 15, coat: HEAVY},
 
-    {weather: data_snowy, temperature: 32, coat: heavy_coat},
-    {weather: data_snowy, temperature: 21, coat: heavy_coat},
-    {weather: data_snowy, temperature: 14, coat: heavy_coat},
-    {weather: data_snowy, temperature: 3, coat: heavy_coat}
+    {weather: SNOW, temperature: 32, coat: HEAVY},
+    {weather: SNOW, temperature: 21, coat: HEAVY},
+    {weather: SNOW, temperature: 14, coat: HEAVY},
+    {weather: SNOW, temperature: 3, coat: HEAVY}
 ];</pre>
-    <p>Training data defines the entire space </p>
+    <p>Training data defines the knowledge of the system, for example we didn't include how a "Windy" day might affect
+        someone's need for a jacket. The impact of this oversight is that the system will attempt to follow its binary
+        tree but it could result in unexpected results.</p>
 </div>
 
 <div id="test-tree" class="hidden">
