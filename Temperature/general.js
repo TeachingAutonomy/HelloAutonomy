@@ -1,10 +1,10 @@
 "use strict";
 
 let contentOrder = [
-    // "introduction",
-    // "library-introduction",
-    // "problem-introduction",
-    // "create-tree",
+    "introduction",
+    "library-introduction",
+    "problem-introduction",
+    "create-tree",
     "evaluate-tree",
     "resulting-tree",
     "test-tree"
@@ -53,6 +53,10 @@ function treeToHtml(tree) {
         '</ul>',
         '</li>',
         '</ul>'].join('');
+}
+
+function exampleEvaluationButton() {
+    document.getElementById('exampleEvaluation').innerText = evaluateTree(decisionTree);
 }
 
 document.getElementById('currentContent').innerHTML = document.getElementById(contentOrder[0]).innerHTML;

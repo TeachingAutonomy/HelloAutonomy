@@ -185,7 +185,8 @@ decisionTree.predict({weather: "Sun", temperature: 28})</pre>
         most complete fashion, but this is a good starting point.</p>
 
     <p>With these evaluation rules in mind we can create an evaluation function. This way we can check how accurate each
-        our decision tree is within the scope of our problem. Checkout <a href="evaluate.js" target="_blank">evaluate.js</a>
+        our decision tree is within the scope of our problem. Checkout <a href="evaluate.js"
+                                                                          target="_blank">evaluate.js</a>
         if you want to see the whole method, it is named "evaluateTestPoint".</p>
 
     <p>Now to find the accuracy of our decision tree, we need to take our evaluation method and run it hundreds of times
@@ -194,11 +195,14 @@ decisionTree.predict({weather: "Sun", temperature: 28})</pre>
 
     <p>If you at <a href="evaluate.js" target="_blank">evaluate.js</a> you will see a method called 'evaluateTree' where
         we can provide a decision tree and a loop runs. The loop generates a random test point and then evaluates it
-        against our decision tree to find the accuracy of the prediction. Since these test points are random the outcome
-        resulting average of the accuracy can change slightly, but as you can see since we have a good set of training
-        data we have relatively high accuracy, in relation to our evaluation rules.</p>
-    <span id="exampleEvaluation"></span>
-    <button onclick="evaluateTree(decisionTree)">Click to Test</button>
+        against our decision tree to find the accuracy of the prediction.</p>
+    <p>The accuracy of our decision tree: <span id="exampleEvaluation"></span>/10
+        <button onclick="exampleEvaluationButton()">Retest</button>
+    </p>
+
+    <p>Since these test points are random the outcome resulting average of the accuracy can change slightly, but as you
+        can see since we have a good set of training data we have relatively high accuracy, in relation to our
+        evaluation rules.</p>
 
 </div>
 
